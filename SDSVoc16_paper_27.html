@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+  
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="en-GB"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <meta name="author" content="Andrea Perego, Anders Friis-Christensen, Lorenzino Vaccari, Chrisa Tsinaraki (European Commission, Joint Research Centre)"/>
+    <title>Using DCAT-AP for research data</title>
+    <meta name="description" content="Use cases and open issues identified during the development of the corporate data catalogue of the European Commission's Joint Research Centre (JRC)."/>
+    <meta name="keywords" content="research data, scientific data, cross-domain interoperability, DCAT-AP, GeoDCAT-AP, StatDCAT-AP, application profile, data citation, modelling identifiers, persistent identifiers, persistent URIs, ORCID, DOI, modelling agent roles, API-based data access, data provenance, data quality, data usage, users' feedback, publishing metadata on the Web">
+    <link rel="canonical" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27"/>
+    <link rel="self" type="text/html" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27.html"/>
+    <link rel="alternate" type="application/pdf" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27.pdf"/>
+    <meta http-equiv="last-modified" content="2016-12-05"/>
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="https://getbootstrap.com/docs/3.3/assets/css/docs.min.css"/>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://bootswatch.com/3/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="https://bootswatch.com/3/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://getbootstrap.com/docs/3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com/docs/3.3/assets/js/docs.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('head').append('<style type="text/css">@media all { #notes dl dt { text-align:left; } #references dt { width:3em;font-weight:normal;float:left;text-align:right; } #references dd { margin-left:4em; } } @media screen { .popover a, .tooltip a { overflow-wrap:break-word;word-break:break-all; } #references dt:target { border-left:solid 3px #f00;color:#aa6708; } #references dt:target, #references dt:target + dd { color:#aa6708; } } @media print { .tooltip, .popover, .print-version, .print-version + dd, .slides, .slides + dd { visibility:hidden;display:none; } a:not([href^="#"]):after { content:" (" attr(href) ")"!important; } #notes .URL + dd a[href]:after, #references > dl > dd a[href]:after { content: none!important; } dt { page-break-after:avoid; } figure { page-break-inside:avoid; } article section p, article section li, article section dd { text-align:justify;hyphens:auto; } #references > dl > dd > a[href] { word-break:break-all;hyphens:manual; } }</style>');
+        setRefNr();
+        addToc();
+        $('body').addClass('row-fluid').attr('role', 'document');
+        $('article').addClass('bs-docs-container clearfix container main').attr('role', 'main');
+        $('article > header').addClass('page-header');
+        $('article > header > dl').addClass('lead');
+        $('article > header > dl').addClass('dl-horizontal');
+        $('article > header > dl > dt').addClass('text-muted');
+        $('article section').addClass('bs-docs-section');
+        $('#notes').addClass('small');
+        $('#notes dl').addClass('dl-horizontal');
+        $('#notes dt').addClass('text-muted');
+        $('#notes .event').prepend('<span class="glyphicon glyphicon-home" style="margin-right:1em;"></span>');
+        $('#notes .URL').prepend('<span class="glyphicon glyphicon-globe" style="margin-right:1em;"></span>');
+        $('#notes .last-modified').prepend('<span class="glyphicon glyphicon-edit" style="margin-right:1em;"></span>');
+        $('#notes .print-version').prepend('<span class="glyphicon glyphicon-print" style="margin-right:1em;"></span>');
+        $('#notes .slides').prepend('<span class="glyphicon glyphicon-blackboard" style="margin-right:1em;"></span>');
+        $('#disclaimer').addClass('bs-callout bs-callout-warning small');
+        $('a').not('[href^="#"]').each( function () { $(this).attr('title', $(this).attr('href')); } );
+        $('pre:has(code)').addClass('highlight');
+        $('.example').addClass('bs-example');
+        $('footer').addClass('container-fluid');
+        $('[data-toggle="popover"]').each( function() { var $container = $(this); $container.popover({ container : $container , delay : { show : 0 , hide : 1000 } }); } );
+        $('[data-toggle="tooltip"]').tooltip( { placement : "auto bottom" } );
+      } );
+      function setRefNr() {
+        var refItemList = '#references > *';
+        $('#references > dl > dt').each(function( index ) {
+          var refnr = index + 1;
+          var html = $($(this).next('dd')).html();
+          var text = $($(this).next('dd')).text().replace(/(\r\n|\n|\s+)/gm," ").trim();
+          $(this).text('[' + refnr + ']');
+          $('a[href=#' + $(this).attr('id') + ']').text( refnr ).attr('title', '' ).wrap('<span></span>');
+          $('span:has(a[href=#' + $(this).attr('id') + '])').attr('title', '' ).attr('data-toggle', 'popover' ).attr('data-content', html ).attr('type', 'button' ).attr('data-placement', 'auto' ).attr('data-original-title','Reference').attr('data-html','true').attr('data-trigger','hover focus');
+        } );
+      }
+      function addToc() {
+        $('body').prepend('<nav id="toc"></nav>');
+        $('body').addClass('row-fluid').attr('role', 'document');
+        $('nav').addClass('bs-docs-sidebar table-of-contents main-menu container hidden-print hidden-sm hidden-xs col-md-3').attr('role', 'complementary').attr('data-spy', 'affix');
+        $('article').addClass('col-md-8 col-md-offset-3');
+        $('nav').append('<ul><li class="navbar-header navbar-brand" style="float:none;">Contents</li></ul>');
+        $('article > section :header').each( function() {
+          var id = $(this).parent('section').attr('id');
+          var parentid = $(this).parent('section').parent('section').attr('id');
+          var text = $(this).text();
+          var subsections = '';
+          if ($(this).parent('section:has(section)')) {
+            subsections = '<ul></ul>';
+          }
+          var tocitem = '<li><a href="#' + id + '">' + text + '</a>' + subsections + '</li>';
+            if (parentid != undefined) {
+              $('li:has(a[href=#' + parentid + ']) > ul').append(tocitem);
+            }
+            else {
+              $('nav > ul').append(tocitem);
+            }
+        } );
+        $('nav > ul').addClass('bs-docs-sidenav');
+        $('nav ul').addClass('nav');
+      }
+    </script>
+  </head>
+  <body>
+
+    <article>
+
+    <header>
+      <h1>Using DCAT-AP for research data</h1>
+      <dl>
+        <dt>Authors</dt>
+        <dd>Andrea&nbsp;Perego, Anders&nbsp;Friis-Christensen, Lorenzino&nbsp;Vaccari, Chrisa&nbsp;Tsinaraki</dd>
+        <dt>Affiliation</dt>
+        <dd><a title="https://ec.europa.eu/jrc/" href="https://ec.europa.eu/jrc/">European Commission, Joint Research Centre (JRC)</a></dd>
+      </dl>
+      <section id="abstract">
+        <h2>Abstract</h2>
+
+<p>This paper outlines a set of cross-domain requirements for the documentation of scientific data, identified during the development of the corporate data catalogue of the European Commission's Joint Research Centre (JRC).</p>
+<p>In particular, we illustrate how we have extended the <em>DCAT application profile for European data portals</em>&nbsp;(DCAT-AP) to accomodate requirements for scientific datasets, and we discuss a number of issues still to be addressed.</p>
+
+      </section>
+      <section id="notes">
+        <dl>
+          <dt class="event">Workshop</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/"><em>Smart Descriptions &amp; Smarter Vocabularies</em> (SDSVoc). Amsterdam, 30&nbsp;Nov - 1&nbsp;Dec&nbsp;2016</a>.</dd>
+          <dt class="URL">URL</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27">https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27</a></dd>
+          <dt class="last-modified">Last modified</dt>
+          <dd><time datetime="2016-12-05">5 Dec 2016</time></dd>
+        </dl>
+        <dl>
+          <dt class="print-version">Print version</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_27.pdf">Download PDF</a></dd>
+          <dt class="slides">Slides</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/andrea1.pdf">Download PDF</a></dd>
+        </dl>
+      </section>
+      
+      <section id="disclaimer">
+        <p><strong>Disclaimer</strong>: The views expressed are purely those of the author and may not in any circumstances be regarded as stating an official position of the European Commission.</p>
+      </section>
+      
+    </header>
+    
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+<p>The overall mission of the <a href="https://ec.europa.eu/jrc/">Joint Research Centre of the European Commission (JRC)</a> is to support EU policies with independent evidence throughout the whole policy life-cycle. The activities of the JRC span many different research areas, that address and ensure a healthy and safe environment, secure energy supplies, sustainable mobility and consumer health and safety. Thus, the JRC is a multidisciplinary research organisation and the diversity of its research activities poses challenges in the management of data, since different scientific disciplines have their own traditions, standards and best-practices on how to manage and disseminate research information.</p>
+<p>In order to provide a basis for better management of data, in 2014 the JRC developed a corporate data policy&nbsp;[<a href="#ref-JDP">JDP</a>], driven by the need of transparency in the policy development cycle, and to facilitate open access to research data, in line with the general Open Data trend.</p>
+<p>
+<p>As part of the activities concerning the implementation of the JRC Data Policy, JRC has set up a <a href="http://data.jrc.ec.europa.eu/">corporate catalogue</a>, which is meant to be a single point of access to data produced and/or maintained by JRC. In this context, metadata play a fundamental role, and are meant to address a number of requirements, which include (a) ensuring data documentation and inventory, (b) enabling data discovery and (c) publishing metadata on other catalogues operated by EU institutions and bodies - in particular, the <a href="http://data.europa.eu/euodp/">EU Open Data Portal</a>.</p>
+<p>The multidisciplinary nature of JRC datasets makes it difficult to define a common metadata schema able to fit all requirements. Therefore, the design of the JRC metadata schema is following a modular approach consisting of a <em>core</em> profile, defining the elements that should be common to all metadata
+records, and a set of domain-specific <em>extensions</em>.</p>
+<p>The reference metadata standard used is the <em>DCAT application profile for European data portals</em> (DCAT-AP)&nbsp;[<a href="#ref-DCAT-AP">DCAT-AP</a>] (the <em>de facto</em> EU standard metadata interchange format), and the related domain-specific extensions - namely, GeoDCAT-AP&nbsp;[<a href="#ref-GeoDCAT-AP">GeoDCAT-AP</a>] (for geospatial metadata) and StatDCAT-AP (for statistical metadata)&nbsp;[<a href="#ref-StatDCAT-AP">StatDCAT-AP</a>].</p>
+<p>The core profile of JRC metadata is however not using DCAT-AP <em>as is</em>, but it complements it with a number of metadata elements that have been identified as most relevant across scientific domains, and which are required in order to support data citation.</p>
+<p>The following sections provide a summary of the adopted solutions, and discuss a number of issues still to be addressed.</p>
+
+    </section>
+
+    <section id="metadata-elements-relevant-for-scientific-data">
+      <h2>Metadata elements relevant for scientific data</h2>
+
+<p>The most common, cross-domain requirements we identified for JRC data are following ones:</p>
+<ol>
+<li>Ability to indicate dataset authors.</li>
+<li>Ability to describe data lineage.</li>
+<li>Ability to give potential data consumers information on how to use the data ("usage notes").</li>
+<li>Ability to link to scientific publications about a dataset.</li>
+<li>Ability to link to input data (i.e., data used to create a dataset).</li>
+</ol>
+<p>Points (2) (data lineage) and (5) (input data) are already supported by DCAT-AP via, respectively, <a href="http://purl.org/dc/terms/#terms-provenance"><code>dct:provenance</code></a> and <a href="http://purl.org/dc/terms/#terms-source"><code>dct:source</code></a>. For the other ones, our approach is as follows:</p>
+<ul>
+<li>Dataset authors: <a href="http://purl.org/dc/terms/#terms-creator"><code>dct:creator</code></a>.</li>
+<li>Usage notes: <a href="http://vocab.org/vann/#usageNote"><code>vann:usageNote</code></a>.</li>
+<li>Related (scientific) publications: <a href="http://purl.org/dc/terms/#terms-isReferencedBy"><code>dct:isReferencedBy</code></a>.</li>
+</ul>
+<p>Information on dataset authors, input data and publications provide a first, simplified, picture of the "context" of a dataset, that can be used for multiple purposes. For instance, to filter datasets based on their authors or input data, to identify the most used datasets, the use cases where a dataset has been used. However, to support this effectively, a key requirement is the ability to rely on persistent identifiers.</p>
+<p>In this perspective, we have integrated <a href="http://orcid.org/">ORCIDs</a>, whenever available, in dataset authors metadata, whereas all the dataset published on the JRC Data Catalogue are assigned a persistent URI from the <a href="http://data.europa.eu/">URI registry of EU institutions and bodies</a> operated by the Publications Office of the EU. This will ensure the long-term availability of metadata records also in case the existing infrastructure is migrated.</p>
+<p>Such an approach ensures the ability of linking resources maintained at the corporate level, but of course this does not apply to external ones (as it happens frequently for input data) not associated with a persistent identifier.</p>
+
+
+    </section>
+
+    <section id="data-citation">
+      <h2>Data citation</h2>
+
+<p><a href="https://www.datacite.org/">DataCite</a> is an international initiative meant to enable citation for scientific datasets. To achieve this, DataCite operates a metadata infrastructure, following the same approach used by <a href="http://www.crossref.org/">CrossRef</a> for scientific publications. As such, the DataCite infrastructure is responsible for issuing persistent identifiers (in particular, DOIs) for datasets, and for registering dataset metadata. Such metadata are to be provided according to the DataCite metadata schema – which is basically an extension to the one used for DOI records.</p>
+
+<p>Since DataCite is currently the <em>de facto</em> standard for data citation, we started by carrying out a preliminary study concerning the mapping of DataCite with DCAT-AP, and by developing an experimental, XSLT-based, implementation of the defined transformation rules&nbsp;[<a href="#ref-DCAT-AP-DataCite">DCAT-AP-DataCite</a>].</p>
+
+<p>Based on this work, we recognise that what needs to be added in DCAT-AP for data citation purposes is basically only one "field" (already mentioned above), namely, "data authors".</p>
+<p>Other issues concern mainly (a) identifiers (DOIs, ORCIDs, ISNIs, ISSNs, etc.) and (b) agent roles, which are elaborated in the following sections.</p>
+
+      <section id="data-citation-identifiers">
+        <h3>Identifiers</h3>
+      
+<p>The requirements are basically the following ones:</p>
+<ul>
+<li>DataCite requires the dataset identifier to be a DOI.</li>
+<li>DataCite distinguishes between primary and secondary identifiers.</li>
+<li>DataCite models the "type" of identifier (DOIs, ORCIDs, ISNIs, ISSNs, etc.).</li>
+</ul>
+<p>DCAT-AP already provides a mechanism to model primary and secondary identifiers, as well as the identifier type. More precisely:</p>
+<ul>
+<li>Property <a href="http://purl.org/dc/terms/#terms-identifier"><code>dct:identifier</code></a> is used to model primary identifiers.</li>
+<li>Property <a href="https://www.w3.org/TR/vocab-adms/#adms-identifier"><code>adms:identifier</code></a> is used to model secondary/alternative identifiers.</li>
+<li>Class <a href="https://www.w3.org/TR/vocab-adms/#identifier"><code>adms:Identifier</code></a> allows the specification of information about the identifier - identifier scheme included. More precisely, the identifier is specified by using property <a href="https://www.w3.org/TR/skos-reference/#notations"><code>skos:notation</code></a>, typed with
+the URI of one of the members of the DataCite <a href="http://www.sparontologies.net/ontologies/datacite/source.html#d4e641">Resource Identifier Scheme</a>.</li>
+</ul>
+<p>Such solutions are basically reflecting the DataCite approach to model identifiers. However, it is questionable whether they fit requirements for different or more general scenarios. In particular, the issue is that identifiers modelled in this way are of no use for effectively linking the relevant resources. For this purpose, it would be desirable to promote the encoding of identifiers as HTTP URIs, whenever possible. This is the case, e.g., for ORCIDs, ISNIs, and DOIs. Notably, some of the relevant identifier services already offer the ability to retrieve machine-readable metadata by dereferencing URIs (e.g., this applies to ORCIDs and DOIs). Finally, about the ability to modelling differently primary and secondary/alternative identifiers: the resource URI can denote the primary identifier, whereas URIs corresponding to alternative identifiers can be specified by using <a href="https://www.w3.org/TR/owl-ref/#sameAs-def"><code>owl:sameAs</code></a>.</p>
+<p>Another issue concerns the actual benefits of modelling identifiers with a specific class. E.g., <code>adms:Identifier</code> was meant to enable the specification of the identifier scheme agency and the identifier issue date, following the conceptual definition of the UN/CEFACT Identifier class&nbsp;[<a href="#ref-CCTS-DTC">CCTS-DTC</a>]. However, if only the identifier scheme is required, the question is whether it would be possible to simplify the current representation. Possible options include the following:</p>
+<ol>
+<li>Modelling identifier schemes as datatypes. In such a case, it would be possible to use just <code>dct:identifier</code>, typed with the relevant identifier scheme data type.</li> 
+<li>Defining specific properties for each identifier scheme (as sub-properties of <code>dct:identifier</code>). Notably, some of these properties are already defined in existing vocabularies - e.g., <a href="http://bibliographic-ontology.org/"><code>bibo:doi</code></a> -, and therefore they can be re-used.</li>
+</ol>
+<p>Based on what said above, the possible solutions, alternative to the current one, can be summarised as follows:</p>
+<ol>
+<li>Encode identifiers as (HTTP) URIs, whenever possible (DOIs, ORCIDs, etc.), using <code>owl:sameAs</code> for (HTTP) URIs concerning secondary/alternative identifiers.</li>
+<li>Model identifiers with <code>dct:identifier</code>, typed with the relevant identifier scheme data type, or with specific subproperties of <code>dct:identifier</code>.</li>
+<li>If the ability of denoting identifiers as secondary/alternative is a requirement, use <code>adms:identifier</code>.</li>
+</ol>
+<p>It is worth noting that these three options are not mutually exclusive.</p>
+
+
+      </section>
+      
+      <section id="data-agent-roles">
+        <h3>Agent roles</h3>
+        
+<p>DataCite supports three main types of agent roles, namely, author, publisher, and contributor. The last can be further specialised by specifying a contributor "type". At the time of writing this paper, DataCite supports 22 contributor types, including, e.g., "contact person", "data curator", "distributor", "editor", "producer", "rights holder", "other".</p>
+<p>This situation is not different from other metadata standards. E.g., ISO 19115&nbsp;[<a href="#ref-ISO-19115">ISO-19115</a>], the standard for geospatial metadata, originally included 11 agent roles - a number that, in the latest version of this standard, has increased to 20.</p>
+<p>The issue arises when trying to share and re-use these metadata records, since this information might be lost, unless it is mapped consistently. On the other hand, the question is also if such information could be actually relevant - e.g., it might important to preserve information only the of "key" roles, as dataset creator, publisher and contact point.</p>
+<p>The current version of DCAT-AP (v1.1) supports only two agent roles, namely, data publisher and contact point. GeoDCAT-AP includes other two ones - namely, dataset creator and rights holder - but, in addition, it defines a mechanism to model all the ISO 19115 roles, making use of the W3C PROV Ontology&nbsp;[<a href="#ref-PROV">PROV</a>]. It is worth noting that this feature is only supported in the full GeoDCAT-AP profile, which is meant to provide a complete representation of the metadata elements defined in the core profile of ISO 19115 and in the INSPIRE metadata specification&nbsp;[<a href="#ref-INSPIRE-MD-TG">INSPIRE-MD-TG</a>].</p>
+<p>An example is provided by the following code snippet:</p>
+
+<figure class="example">
+<pre><code class="language-turtle">a:Dataset a dcat:Dataset; 
+  prov:qualifiedAttribution [ a prov:Attribution ;
+# The agent role, as per ISO 19115
+    dct:type &lt;http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/owner&gt; ;
+# The agent playing that role
+    prov:agent [ a foaf:Organization ;
+      foaf:name "European Union"@en ] ] .</code></pre>        
+<figcaption>Example of a GeoDCAT-AP PROV-based representation of an agent role.</figcaption>
+</figure>
+
+<p>The PROV-based solution defined in GeoDCAT-AP has the advantage of being domain-independent - e.g., it could be re-used also to model DataCite agent roles. Moreover, it provides the ability to attach additional information (e.g., during which timeframe a given agent played a given role). However, it has two drawbacks:</p>
+<ol>
+<li>It is overly complex, compared with the use of <em>simple</em> role properties - as <code>dct:creator</code>, <code>dct:publisher</code>, <code>dct:contributor</code>.</li>
+<li>To denote the role, it makes use of URIs operated by the <a href="http://inspire.ec.europa.eu/registry/">INSPIRE Registry</a> for the agent roles defined in ISO 19115. As a consequence, if roles defined in another standard are used, the code list will be different, and interoperability will not be granted.</li>
+</ol>
+<p>A possible solution has been discussed during the revision of DCAT-AP, based on the idea of maintaining a "role property vocabulary", that could also be used to bridge the agent roles defined in the different metadata standards. So far, this seems to be the most viable solution, at least in the framework of DCAT-AP, and related profiles.<!--</p>
+<p>--> Such "role property vocabulary" could also be used as a means to prevent the inconsistent use of agent roles. This issue is more and more apparent in metadata standards supporting multiple roles, with overlapping semantics (e.g., the difference between a data distributor and a data publisher is not always clear). We do not have evidence of such a situation in DataCite. However, as far as geospatial metadata are concerned, a study&nbsp;[<a href="#ref-URPRIM">URPRIM</a>] has been carried out in 2014 on the records available from the <a href="http://inspire-geoportal.ec.europa.eu/">INSPIRE Geoportal</a>, harvested across EU Member States. The results show that, among the 11 agent roles defined in ISO 19115, the one most used was "point of contact", followed by "owner", whereas the collected statistics, aggregated by country, suggest that roles “custodian”, “distributor”, “publisher” and “resource provider” were used to denote the same role.</p>
+<p>A consistent use of agent roles is crucial to enable metadata interoperability. If not ensured, preserving this information would be useless or even counterproductive. In such a case, identifying a minimal set of unambiguous roles and promote their use would be preferable - e.g., those already supported by DCAT-AP, plus a few ones.</p>
+      
+      </section>
+      
+    </section>
+    
+    <section id="modelling-service-api-based-data-access">
+      <h2>Modelling service/API-based data access</h2>
+      
+<p>This issue concerns dataset distribution that are made accessible via services and APIs. Examples include SPARQL endpoints, as well as the download and view services used for geospatial data. In such cases, users, who expect to get to the actual "data", are instead returned an API query interface, usually meant to be used by software agents. On the other hand, software agents are not provided enough information on how to access the data via the target service / API. Finally, an additional issue is that a service / API may provide access to more than one dataset. As a consequence, users (as well as software agents) do not know how to get access to the subset of relevant data accessible via a service.<!--</p>
+<p>--> Requirements to address this issue are basically two:</p>
+<ol>
+<li>Denote distributions as pointing to a service / API, and not directly to the actual data.</li>
+<li>Provide a description of the API / service interface, along with the relevant query parameters, that can be directly used by software agents - either to access the data, or to make transparent data access to end users.</li>
+</ol>
+<p>We are currently addressing point (1) by associating with distributions the following information:</p>
+<ul>
+<li>Whether the access / download URL of a distribution points to data or to a service / API (<code>dct:type</code>).</li>
+<li>In the latter case, we include the specification the service/API conforms to (<code>dct:conformsTo</code>).</li>
+</ul>
+<p>An example is provided by the following code snippet. Here, the distribution's access URL points to service, implemented by using the WMS standard of the <a href="http://www.opengeospatial.org/"><em>Open Geospatial Consortium</em> (OGC)</a>:</p>
+
+<figure class="example">
+<pre><code class="language-turtle">a:Dataset a dcat:Dataset; 
+  dcat:distribution [ a dcat:Distribution ;
+    dct:title "GMIS - WMS (9km)"@en ;
+    dct:description "Web Map Service (WMS) - GetCapabilities"@en ;
+    dct:license &lt;http://publications.europa.eu/resource/authority/licence/COM_REUSE&gt; ;
+    dcat:accessURL &lt;http://gmis.jrc.ec.europa.eu/webservices/9km/wms/meris/?dataset=kd490&gt; ;
+# The distribution points to a service
+    dct:type &lt;http://publications.europa.eu/resource/authority/distribution-type/WEB_SERVICE&gt; ;
+# The service conforms to the WMS specification
+    dct:conformsTo &lt;http://www.opengis.net/def/serviceType/ogc/wms&gt; ] .</code></pre>
+<figcaption>Example of a distribution pointing to a WMS service.</figcaption>
+</figure>
+
+<p>As far as point (2) is concerned (i.e., provide a description of the API / service interface), we are considering a number of possible options. Currently, the one that seems promising is the proposal, developed in the framework of the <em>DCAT-AP implementation guidelines</em>&nbsp;[<a href="#ref-DCAT-AP-IG">DCAT-AP-IG</a>], to describe a service/API by using an OpenSearch document&nbsp;[<a href="#ref-OpenSearch">OpenSearch</a>] - see issue <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/issue/dt2-service-based-data-access"><em>DT2: Service-based data access</em></a> on JoinUp.</p>
+        
+    </section>
+    
+    <section id="additional-requirements">
+      <h2>Additional requirements</h2>
+
+<p>We include below some additional requirements we are investigating, and that we cannot elaborate further due to space constraints.</p>
+<dl>
+<dt>Detailed specification of data provenance</dt>
+<dd>This is meant to provide a detailed representation of the "data context", including all the entities and activities involved in the data life-cycle. The objectives include (a) data reproducibility and (b) ability to track the usage of data as well as the models used for their creation.</dd>
+<dt>Modelling and using data quality assessments</dt>
+<dd>This is not limited to data, but concerns metadata as well, and it potentially includes the integration of users' feedback as part of the meta/data management life-cycle. On this topic, we are considering approaches making use of vocabularies as the W3C PROV Ontology&nbsp;[<a href="#ref-PROV">PROV</a>], the Data Quality Vocabulary (DQV)&nbsp;[<a href="#ref-DQV">DQV</a>] and the Dataset Usage Vocabulary (DUV)&nbsp;[<a href="#ref-DUV">DUV</a>].</dd>
+<dt>Optimising metadata publication on the Web</dt>
+<dd>One of the use cases concerns increasing visibility and discoverability of JRC data on the Web, also via search engines. It basically relies on the use of mechanisms as HTML+RDFa&nbsp;[<a href="#ref-HTML-RDFa">HTML-RDFa</a>], but it includes as well mapping exercises with popular Web vocabularies, as Schema.org - see, e.g., [<a href="#ref-DCAT-AP-Schema">DCAT-AP-Schema</a>].</dd>
+</dl>
+<p>Some of these issues are discussed in a separated paper [<a href="#ref-SDSvoc25">SDSvoc25</a>], to which we refer the reader.</p>
+    </section>
+    <section id="references">
+      <h2>References</h2>
+
+<dl>
+<dt id="ref-CCTS-DTC">CCTS-DTC</dt>
+<dd>
+<cite class="title">Core Components Data Type Catalogue. Version 3.1</cite>
+<span class="date">(<time>2011</time>)</span>
+<span class="organisation">United Nations Centre for Trade Facilitation and Electronic Business (UN/CEFACT)</span>
+<span class="URL"><a href="http://www.unece.org/fileadmin/DAM/cefact/codesfortrade/CCTS/CCTS-DTCatalogueVersion3p1.pdf">http://www.unece.org/fileadmin/DAM/cefact/codesfortrade/CCTS/CCTS-DTCatalogueVersion3p1.pdf</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP-DataCite">DCAT-AP-DataCite</dt>
+<dd>
+<cite class="title">DataCite to DCAT-AP Mapping</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/datacite-to-dcat-ap/">https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/datacite-to-dcat-ap/</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP">DCAT-AP</dt>
+<dd>
+<cite class="title">DCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2015</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/dcat-application-profile-data-portals-europe">https://joinup.ec.europa.eu/solution/dcat-application-profile-data-portals-europe</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP-IG">DCAT-AP-IG</dt>
+<dd>
+<cite class="title">DCAT application profile implementation guidelines</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/dcat-application-profile-implementation-guidelines">https://joinup.ec.europa.eu/solution/dcat-application-profile-implementation-guidelines</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP-Schema">DCAT-AP-Schema</dt>
+<dd>
+<cite class="title">DCAT-AP to Schema.org Mapping</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/dcat-ap-to-schema.org/">https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/dcat-ap-to-schema.org/</a></span>
+</dd>
+
+<dt id="ref-DQV">DQV</dt>
+<dd>
+<cite class="title">Data on the Web Best Practices: Data Quality Vocabulary</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/vocab-dqv/">https://www.w3.org/TR/vocab-dqv/</a></span>
+</dd>
+
+<dt id="ref-DUV">DUV</dt>
+<dd>
+<cite class="title">Data on the Web Best Practices: Dataset Usage Vocabulary</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/vocab-duv/">https://www.w3.org/TR/vocab-duv/</a></span>
+</dd>
+
+<dt id="ref-GeoDCAT-AP">GeoDCAT-AP</dt>
+<dd>
+<cite class="title">GeoDCAT-AP: A geospatial extension for the DCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/node/139283">https://joinup.ec.europa.eu/node/139283</a></span>
+</dd>
+
+<dt id="ref-SDSvoc25">SDSvoc25</dt>
+<dd>
+<cite class="title">GeoDCAT-AP: Use cases and open issues</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25">https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25</a></span>
+</dd>
+
+<dt id="ref-HTML-RDFa">HTML-RDFa</dt>
+<dd>
+<cite class="title">HTML+RDFa 1.1 - Second Edition: Support for RDFa in HTML4 and HTML5</cite>
+<span class="date">(<time>2015</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/html-rdfa/">https://www.w3.org/TR/html-rdfa/</a></span>
+</dd>
+
+<dt id="ref-INSPIRE-MD-TG">INSPIRE-MD-TG</dt>
+<dd>
+<cite class="title">INSPIRE Metadata Implementing Rules: Technical Guidelines based on EN ISO 19115 and EN ISO 19119. Version 3.1</cite>
+<span class="date">(<time>2013</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="http://inspire.ec.europa.eu/documents/Metadata/MD_IR_and_ISO_20131029.pdf">http://inspire.ec.europa.eu/documents/Metadata/MD_IR_and_ISO_20131029.pdf</a></span>
+</dd>
+
+<dt id="ref-ISO-19115">ISO-19115</dt>
+<dd>
+<cite class="title">ISO 19115:2003: Geographic information -- Metadata</cite>
+<span class="date">(<time>2003</time>)</span>
+<span class="organisation">International Organization for Standardization (ISO)</span>
+<span class="URL"><a href="https://www.iso.org/standard/26020.html">https://www.iso.org/standard/26020.html</a></span>
+</dd>
+
+<dt id="ref-JDP">JDP</dt>
+<dd>
+<cite class="title">JRC Data Policy</cite>
+<span class="date">(<time>2015</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL">doi:<a href="https://doi.org/10.2788/607378">10.2788/607378</a></span>
+</dd>
+
+<dt id="ref-OpenSearch">OpenSearch</dt>
+<dd>
+<cite class="title">OpenSearch</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">OpenSearch.org</span>
+<span class="URL"><a href="http://www.opensearch.org/">http://www.opensearch.org/</a></span>
+</dd>
+
+<dt id="ref-PROV">PROV</dt>
+<dd>
+<cite class="title">PROV-O: The PROV Ontology</cite>
+<span class="date">(<time>2013</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/prov-o/">https://www.w3.org/TR/prov-o/</a></span>
+</dd>
+
+<dt id="ref-StatDCAT-AP">StatDCAT-AP</dt>
+<dd>
+<cite class="title">StatDCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/statdcat-application-profile-data-portals-europe">https://joinup.ec.europa.eu/solution/statdcat-application-profile-data-portals-europe</a></span>
+</dd>
+
+<dt id="ref-URPRIM">URPRIM</dt>
+<dd>
+<cite class="title">Use of responsible party roles in INSPIRE metadata</cite>
+<span class="date">(<time>2014</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="https://ies-svn.jrc.ec.europa.eu/projects/metadata/wiki/Use_of_responsible_party_roles">https://ies-svn.jrc.ec.europa.eu/projects/metadata/wiki/Use_of_responsible_party_roles</a></span>
+</dd>
+
+</dl>
+  
+    </section>
+    <footer>
+    </footer>
+    </article>  
+  </body>
+</html>

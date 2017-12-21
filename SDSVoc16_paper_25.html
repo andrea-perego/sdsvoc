@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+  
+    <meta charset="utf-8"/>
+    <meta http-equiv="content-language" content="en-GB"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <meta name="author" content="Andrea Perego, Anders Friis-Christensen, Michael Lutz (European Commission, Joint Research Centre)"/>
+    <title>GeoDCAT-AP: Use cases and open issues</title>
+    <meta name="description" content="Use cases and open issues identified during the design and implementation of GeoDCAT-AP."/>
+    <meta name="keywords" content="geospatial data, INSPIRE, cross-domain interoperability, DCAT-AP, GeoDCAT-AP, StatDCAT-AP, profile-based negotiation, publishing metadata on the Web, mapping vocabularies, API-based data access, data quality, data usage">
+    <link rel="canonical" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25"/>
+    <link rel="self" type="text/html" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25.html"/>
+    <link rel="alternate" type="application/pdf" href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25.pdf"/>
+    <meta http-equiv="last-modified" content="2016-12-05"/>
+    
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/readable/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="https://getbootstrap.com/docs/3.3/assets/css/docs.min.css"/>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://bootswatch.com/3/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="https://bootswatch.com/3/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://getbootstrap.com/docs/3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://getbootstrap.com/docs/3.3/assets/js/docs.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('head').append('<style type="text/css">@media all { #notes dl dt { text-align:left; } #references dt { width:3em;font-weight:normal;float:left;text-align:right; } #references dd { margin-left:4em; } } @media screen { .popover a, .tooltip a { overflow-wrap:break-word;word-break:break-all; } #references dt:target { border-left:solid 3px #f00;color:#aa6708; } #references dt:target, #references dt:target + dd { color:#aa6708; } } @media print { .tooltip, .popover, .print-version, .print-version + dd, .slides, .slides + dd { visibility:hidden;display:none; } a:not([href^="#"]):after { content:" (" attr(href) ")"!important; } #notes .URL + dd a[href]:after, #references > dl > dd a[href]:after { content: none!important; } dt { page-break-after:avoid; } figure { page-break-inside:avoid; } article section p, article section li, article section dd { text-align:justify;hyphens:auto; } #references > dl > dd > a[href] { word-break:break-all;hyphens:manual; } }</style>');
+        setRefNr();
+        addToc();
+        $('body').addClass('row-fluid').attr('role', 'document');
+        $('article').addClass('bs-docs-container clearfix container main').attr('role', 'main');
+        $('article > header').addClass('page-header');
+        $('article > header > dl').addClass('lead');
+        $('article > header > dl').addClass('dl-horizontal');
+        $('article > header > dl > dt').addClass('text-muted');
+        $('article section').addClass('bs-docs-section');
+        $('#notes').addClass('small');
+        $('#notes dl').addClass('dl-horizontal');
+        $('#notes dt').addClass('text-muted');
+        $('#notes .event').prepend('<span class="glyphicon glyphicon-home" style="margin-right:1em;"></span>');
+        $('#notes .URL').prepend('<span class="glyphicon glyphicon-globe" style="margin-right:1em;"></span>');
+        $('#notes .last-modified').prepend('<span class="glyphicon glyphicon-edit" style="margin-right:1em;"></span>');
+        $('#notes .print-version').prepend('<span class="glyphicon glyphicon-print" style="margin-right:1em;"></span>');
+        $('#notes .slides').prepend('<span class="glyphicon glyphicon-blackboard" style="margin-right:1em;"></span>');
+        $('#disclaimer').addClass('bs-callout bs-callout-warning small');
+        $('a').not('[href^="#"]').each( function () { $(this).attr('title', $(this).attr('href')); } );
+        $('pre:has(code)').addClass('highlight');
+        $('.example').addClass('bs-example');
+        $('footer').addClass('container-fluid');
+        $('[data-toggle="popover"]').each( function() { var $container = $(this); $container.popover({ container : $container , delay : { show : 0 , hide : 1000 } }); } );
+        $('[data-toggle="tooltip"]').tooltip( { placement : "auto bottom" } );
+      } );
+      function setRefNr() {
+        var refItemList = '#references > *';
+        $('#references > dl > dt').each(function( index ) {
+          var refnr = index + 1;
+          var html = $($(this).next('dd')).html();
+          var text = $($(this).next('dd')).text().replace(/(\r\n|\n|\s+)/gm," ").trim();
+          $(this).text('[' + refnr + ']');
+          $('a[href=#' + $(this).attr('id') + ']').text( refnr ).attr('title', '' ).wrap('<span></span>');
+          $('span:has(a[href=#' + $(this).attr('id') + '])').attr('title', '' ).attr('data-toggle', 'popover' ).attr('data-content', html ).attr('type', 'button' ).attr('data-placement', 'auto' ).attr('data-original-title','Reference').attr('data-html','true').attr('data-trigger','hover focus');
+        } );
+      }
+      function addToc() {
+        $('body').prepend('<nav id="toc"></nav>');
+        $('body').addClass('row-fluid').attr('role', 'document');
+        $('nav').addClass('bs-docs-sidebar table-of-contents main-menu container hidden-print hidden-sm hidden-xs col-md-3').attr('role', 'complementary').attr('data-spy', 'affix');
+        $('article').addClass('col-md-8 col-md-offset-3');
+        $('nav').append('<ul><li class="navbar-header navbar-brand" style="float:none;">Contents</li></ul>');
+        $('article > section :header').each( function() {
+          var id = $(this).parent('section').attr('id');
+          var parentid = $(this).parent('section').parent('section').attr('id');
+          var text = $(this).text();
+          var subsections = '';
+          if ($(this).parent('section:has(section)')) {
+            subsections = '<ul></ul>';
+          }
+          var tocitem = '<li><a href="#' + id + '">' + text + '</a>' + subsections + '</li>';
+            if (parentid != undefined) {
+              $('li:has(a[href=#' + parentid + ']) > ul').append(tocitem);
+            }
+            else {
+              $('nav > ul').append(tocitem);
+            }
+        } );
+        $('nav > ul').addClass('bs-docs-sidenav');
+        $('nav ul').addClass('nav');
+      }
+    </script>
+  </head>
+  <body>
+  
+    <article>
+    
+    <header id="front-matter">
+      <h1>GeoDCAT-AP: Use cases and open issues</h1>
+      <dl>
+        <dt>Authors</dt>
+        <dd>Andrea&nbsp;Perego, Anders&nbsp;Friis-Christensen, Michael&nbsp;Lutz</dd>
+        <dt>Affiliation</dt>
+        <dd><a title="https://ec.europa.eu/jrc/" href="https://ec.europa.eu/jrc/">European Commission, Joint Research Centre (JRC)</a></dd>
+      </dl>
+      
+      <section id="abstract">
+        <h2>Abstract</h2>
+<p>This paper illustrates some issues and use cases identified during the design and implementation of GeoDCAT-AP, a metadata profile aiming to provide a representation of geospatial metadata compliant with the <em>DCAT application profile for European data portals</em>&nbsp;(DCAT-AP).</p>
+<p>In particular, the paper focuses on those issues that may have a possible relevance also outside the geospatial domain, covering topics concerning metadata profile-based negotiation, publishing metadata on the Web, representing API-based data access in metadata, and approaches to modelling data quality.</p>
+      </section>
+      
+      <section id="notes">
+        <dl>
+          <dt class="event">Workshop</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/"><em>Smart Descriptions &amp; Smarter Vocabularies</em> (SDSVoc). Amsterdam, 30&nbsp;Nov - 1&nbsp;Dec&nbsp;2016</a>.</dd>
+          <dt class="URL">URL</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25">https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25</a></dd>
+          <dt class="last-modified">Last modified</dt>
+          <dd><time datetime="2016-12-05">5 Dec 2016</time></dd>
+        </dl>
+        <dl>
+          <dt class="print-version">Print version</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/SDSVoc16_paper_25.pdf">Download PDF</a></dd>
+          <dt class="slides">Slides</dt>
+          <dd><a href="https://www.w3.org/2016/11/sdsvoc/andrea2.pdf">Download PDF</a></dd>
+        </dl>
+      </section>
+
+      <section id="disclaimer">
+        <p><strong>Disclaimer</strong>: The views expressed are purely those of the author and may not in any circumstances be regarded as stating an official position of the European Commission.</p>
+      </section>
+      
+    </header>
+
+    <section id="introduction">
+      <h2>Introduction</h2>
+      
+<p>GeoDCAT-AP&nbsp;[<a href="#ref-GeoDCAT-AP">GeoDCAT-AP</a>] is a metadata profile aiming to provide a representation of geospatial metadata compliant with the <em>DCAT application profile for European data portals</em> (DCAT-AP)&nbsp;[<a href="#ref-DCAT-AP">DCAT-AP</a>].</p>
+
+<p>DCAT-AP has been developed in the framework of the EU Programme <a href="http://ec.europa.eu/isa/"><em>Interoperability solutions for public administrations, businesses and citizens</em> (ISA&sup2;)</a> <!--[<a href="#ref-EU-ISA">EU-ISA</a>]-->, with the purpose of defining a cross-domain metadata interchange format that can be used to share dataset metadata across data catalogues operated across the EU.</p>
+
+<p>In this context, GeoDCAT-AP has been specifically designed to enable the sharing of geospatial metadata, in particular those available via the <a href="http://inspire.ec.europa.eu/" title="Infrastructure for spatial information in Europe">INSPIRE</a> infrastructure. To achieve this, GeoDCAT-AP defines mappings from ISO 19115&nbsp;[<a href="#ref-ISO-19115">ISO-19115</a>] (i.e., the world-wide standard for geospatial metadata) to DCAT-AP and other general-purpose RDF vocabularies<!-- (in particular, Dublin Core&nbsp;[<a href="#ref-DC">DC</a>] the W3C PROV Ontology&nbsp;[<a href="#ref-PROV">PROV</a>])-->.</p>
+
+<p>During the design and implementation of GeoDCAT-AP, a number of issues have been identified, concerning requirements for geospatial metadata that were not addressed in existing RDF vocabularies. The following sections focus in particular on those issues that may have a possible relevance also outside the geospatial domain. Each topic is introduced by first illustrating the problem statement. Then, the related use cases from GeoDCAT-AP are described, highlighting both the adopted solutions and the open issues.</p>
+
+    </section>
+    <section id="profile-based-content-negotiation">
+      <h2>Profile-based content negotiation</h2>
+      <section id="profile-based-content-negotiation-problem-statement">
+        <h3>Problem statement</h3>
+
+<p>The ability to request metadata records following a given profile is a feature supported via query parameters by existing standards for catalogue services. E.g., this is the case for the Open Geospatial Consortium's <em>Catalogue Service for the Web</em> (CSW)&nbsp;[<a href="#ref-CSW">CSW</a>] and the Open Archive Initiative's <em>Protocol for Metadata Harvesting</em> (OAI-PMH)&nbsp;[<a href="#ref-OAI-PMH">OAI-PMH</a>].</p>
+
+<p>The issue is that in all these cases the mechanism to request the output profile is specific to the interface used. An interface-independent mechanism, e.g., based on the use of specific HTTP headers,  would be desirable for interoperability purposes.</p>
+
+      </section>
+      <section id="profile-based-content-negotiation-use-case">
+      <h3>Use case</h3>
+      
+<p>The work concerning the implementation of GeoDCAT-AP included the development of an API, able to transform on the fly ISO 19139 records (ISO 19139&nbsp;[<a href="#ref-ISO-19139">ISO-19139</a>] defines the standard XML-based implementation of ISO 19115).</p>
+
+<p>The GeoDCAT-AP API&nbsp;[<a href="#ref-GeoDCAT-API">GeoDCAT-API</a>] is able to return records both in the DCAT-AP and GeoDCAT-AP profiles. The former is meant to be used for harvesting purposes by catalogues only supporting the basic DCAT-AP profile, whereas the latter can be used when a catalogue is supporting also the additional metadata elements defined in GeoDCAT-AP.</p>
+
+<p>More precisely, the API has been designed to re-use the standard query interface of geospatial catalogue services (i.e., CSWs&nbsp;[<a href="#ref-CSW">CSW</a>]), which already supports the possibility of specifying the output metadata profile and format. The output format can also be omitted: in such a case, the GeoDCAT-AP API determines it based on HTTP content negotiation. This is however not the case for the output metadata profile, since there is currently no HTTP-based mechanism for specifying this type of requests. So, the default output metadata profile is determined by the API settings.</p>
+
+<p>The approach currently used in the GeoDCAT-AP API to address this issue is to return metadata records along with a set of HTTP Link headers&nbsp;[<a href="#ref-HTTP-LINK">HTTP-LINK</a>] specifying:</p>
+
+<ul>
+<li>The URL of the source ISO 19139 record.</li>
+<li>The metadata profile of the returned record.</li>
+<li>The URLs of the alternative RDF serialisations of the returned record.</li>
+<!--
+<li>The URLs of the alternative profiles of the returned record.</li>
+-->
+</ul>
+
+<p>A possibility is to modify the last set of Link headers to include also the URLs of the alternative profiles of the returned record. In this scenario, getting access to the preferred metadata profile and serialisation would require retrieving all the different alternative representations until the relevant one is found.</p>
+<!--
+<p>Consequently, in this scenario, getting access to the preferred metadata profile and serialisation requires 2&nbsp;steps: (a)&nbsp;submit a query to the API, and (b)&nbsp;retrieve the target resource by using the information provided by the returned HTTP Link headers.</p>
+-->
+      </section>
+    </section>
+    <section id="publishing-metadata-on-the-web">
+      <h2>Publishing metadata on the Web</h2>
+
+      <section id="publishing-metadata-on-the-web-problem-statement">
+        <h3>Problem statement</h3>
+        
+<p>Geospatial data catalogues offer effective discovery functionalities for specialists. However, as in most data portals, using basic free text search is usually far from being a satisfactory experience. Actually, users (both non-experts and specialists), when searching for data, are frequently making use of popular search engines as a first step to get to the data they are looking for. The same can be said for any other domain-specific and general-purpose data catalogue.</p>
+
+<p>Improving free text search in data catalogues is unlikely to address this issue. Moreover, it would not help users who do not know in which catalogue(s) the relevant data are available. Users will keep on using in any case search engines for this purpose.</p>
+
+<p>An option would be optimising data catalogues for Web discovery, by implementing consistently SEO (Search Engine Optimisation) techniques. The advantages include (but are not limited to) the following:</p>
+
+<ul>
+<li>Increase data visibility - as well as of the catalogues giving access to them.</li>
+<li>Enabling users to find the data better satisfying their requirements (in terms of spatial and temporal coverage, granularity, formats, access and licensing conditions, etc.).</li>
+<li>(For geospatial metadata) Enabling queries not limited to free text fields (e.g., dataset title and description), but concerning also coordinates, spatial / temporal resolution, etc.</li>
+</ul>
+        
+      </section>
+
+      <section id="publishing-metadata-on-the-web-use-case">
+        <h3>Use case</h3>
+        
+<p>The output formats supported by the GeoDCAT-AP API&nbsp;[<a href="#ref-GeoDCAT-API">GeoDCAT-API</a>] include all the existing RDF serialisations, including HTML+RDFa.</p>
+
+<p>HTML+RDFa&nbsp;[<a href="#ref-HTML-RDFa">HTML-RDFa</a>] is W3C standard defining a mechanism to embed structured metadata in HTML documents. HTML+RDFa is actually one of the mechanisms used by search engines to index Web pages.</p>
+
+<p>The GeoDCAT-AP API is not the only tool addressing this issue. For example, this is the case of one of the prototypes developed in the framework of the Geonovum testbed&nbsp;[<a href="#ref-GNTB">GNTB</a>], where an extension to the GeoNetwork platform&nbsp;[<a href="#ref-GN">GN</a>] has been developed, able to transform ISO 19139 records into HTML+RDFa.</p>
+
+<p>Additional work in this direction concerns the use of the Schema.org vocabulary to annotate Web pages via HTML+RDFa, or other mechanisms - as Microformats&nbsp;[<a href="#ref-Microformats">Microformats</a>], Microdata&nbsp;[<a href="#ref-Microdata">Microdata</a>] and HTML-embedded JSON-LD&nbsp;[<a href="#ref-JSON-LD">JSON-LD</a>] - see <a title="Embedding JSON-LD in HTML Documents" href=" https://www.w3.org/TR/json-ld/#embedding-json-ld-in-html-documents">Section&nbsp;6.20</a>.</p>
+
+<p><a href="http://schema.org">Schema.org</a> <!--[<a href="#ref-Schema.org">Schema.org</a>]--> is an initiative backed up by companies running popular search engines (Google, Microsoft, Yahoo and Yandex) to develop a general-purpose vocabulary for the annotation of Web pages. As such, its scope is not limited to data, but it includes also domains as e-commerce, businesses, audio-visual content.</p>
+
+<p>Some work has been carried out to define mappings for DCAT-AP&nbsp;[<a href="#ref-DCAT-AP-Schema">DCAT-AP-Schema</a>], whereas the Geonovum testbed mentioned earlier defined mappings for ISO 19115. In both cases, a number of gaps have been identified, making Schema.org not able to provide a full mapping of DCAT-AP and ISO 19115. Such gaps do not concern only domain-specific metadata elements (e.g., spatial resolution, coordinate reference system), but also more general requirements, as the modelling of identifiers and terms from taxonomies, thesauri, classification systems.</p>
+
+<p>On this topic, it is worth noting that Google recently started a project, titled <a href="https://developers.google.com/search/docs/data-types/datasets"><em>Science Datasets</em></a>, aiming to investigate how to improve the description and discovery of scientific datasets by using Schema.org. On the other hand, the mapping exercises mentioned above raise also the question on whether a full mapping is really needed, given that the mapped vocabularies address different use cases.</p>
+        
+      </section>
+      
+    </section>
+    <section id="modelling-service-api-based-data-access">
+      <h2>Modelling service/API-based data access</h2>
+      
+      <section id="modelling-service-api-based-data-access-problem-statement">
+        <h3>Problem statement</h3>
+        
+<p>This is a domain-independent issue, but a key one for geospatial metadata.</p>
+<p>In the geospatial domain, data are typically made accessible via services (e.g., a view or download service), that, to be used, require specific clients. In metadata, the link to such services is usually pointing to an XML document describing the service's "capabilities". This of course puzzles non-expert users, who expect instead to get the actual "data".</p>
+<p>Moreover, an additional issue is that a service may provide access to more than one dataset. As a consequence, users do not know how to get access to the subset of relevant data accessible via a service.</p>
+<p>Some catalogue platforms (as GeoNetwork&nbsp;[<a href="#ref-GN">GN</a>] and, to some extent, CKAN&nbsp;[<a href="#ref-CKAN">CKAN</a>]) are able to make this transparent for some services (typically, view services), but not for all. It would therefore be desirable to agree on a cross-domain and cross-platform approach to deal with this issue.</p>
+        
+      </section>
+
+      <section id="modelling-service-api-based-data-access-use-case">
+        <h3>Use case</h3>
+        
+<p>In the framework of the <em>DCAT-AP implementation guidelines</em>&nbsp;[<a href="#ref-DCAT-AP-IG">DCAT-AP-IG</a>], a proposal has been developed to describe a service/API by using an OpenSearch document&nbsp;[<a href="#ref-OpenSearch">OpenSearch</a>] - see issue <a href="https://joinup.ec.europa.eu/asset/dcat_application_profile/issue/dt2-service-based-data-access"><em>DT2: Service-based data access</em></a> on JoinUp.</p>
+<p>This approach has the advantage of adopting a general-purpose solution (applicable also to non-geo services), that could be used by catalogues as well as Web applications to make data access more transparent to users, or at least to provide some guidance on how to use the service. Moreover, the same approach would enable machine-based data access.</p>
+        
+      </section>
+    
+    </section>
+    <section id="modelling-data-quality">
+      <h2>Modelling data quality</h2>
+
+      <section id="modelling-data-quality-problem-statement">
+        <h3>Problem statement</h3>
+        
+<p>Here, the notion of "data quality" is used in its broadest sense, including:</p>
+
+<ul>
+<li>Fit-for-purpose.</li>
+<li>Data precision / accuracy.</li>
+<li>Compliance with given quality benchmarks, standards, specifications.</li>
+<li>Quality assessments based on data review / users' feedback.</li>
+</ul>
+
+<p>There is of course no single solution to address all this, so, the following use cases focus on some practical issues identified during the development of DCAT-AP and its domain-specific extensions - namely, GeoDCAT-AP (for geospatial metadata) and StatDCAT-AP (for statistical metadata)&nbsp;[<a href="#ref-StatDCAT-AP">StatDCAT-AP</a>].</p>
+
+      </section>
+
+      <section id="modelling-data-quality-use-case">
+        <h3>Use case</h3>
+        
+<p>Currently, the DCAT-AP family of metadata profiles cover the following aspect of data quality:</p>
+
+<ul>
+<li>Metadata conformance with a metadata standard (DCAT-AP).</li>
+<li>Data conformance with a given data schema/model (DCAT-AP).</li>
+<li>Data conformance with a given reference system (spatial or temporal) (GeoDCAT-AP).</li>
+<li>Data conformance with a given quality specification / benchmark (GeoDCAT-AP).</li>
+<li>Associating data with a quality report (StatDCAT-AP).</li>
+</ul>
+
+<p>The first four ones are modelled by using <a href="http://purl.org/dc/terms/#terms-conformsTo"><code>dct:conformsTo</code></a>, whereas the last one makes use of the W3C Data Quality Vocabulary (DQV)&nbsp;[<a href="#ref-DQV">DQV</a>]. Moreover, GeoDCAT-AP provides an alternative and extended way of expressing "conformance" by using the W3C PROV Ontology&nbsp;[<a href="#ref-PROV">PROV</a>], allowing the specification of additional information about conformance tests (when this has been carried out, by whom, etc.).</p>
+<p>An example of the GeoDCAT-AP PROV-based representation of conformance is provided by the following code snippet:</p>
+
+<figure class="example">
+<pre><code class="language-turtle">a:Dataset a dcat:Dataset ;
+  prov:wasUsedBy <strong>a:TestingActivity</strong> .
+  
+<strong>a:TestingActivity</strong> a prov:Activity ;
+  prov:generated <strong>a:TestResult</strong> ;
+  prov:qualifiedAssociation [ a prov:Association ;
+# Here you can specify which is the agent who did the test, when, etc.
+    prov:hadPlan <strong>a:ConformanceTest</strong> ] .
+      
+# Conformance test result
+<strong>a:TestResult</strong> a prov:Entity ;
+  dct:type <strong>&lt;http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant&gt;</strong> .
+
+<strong>a:ConformanceTest</strong> a prov:Plan ;
+# Here you can specify additional information on the test
+  prov:wasDerivedFrom <strong>&lt;http://data.europa.eu/eli/reg/2014/1312/oj&gt;</strong> .
+
+# Reference standard / specification
+<strong>&lt;http://data.europa.eu/eli/reg/2014/1312/oj&gt;</strong> a prov:Entity, dct:Standard ;
+  dct:title "Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services"@en
+  dct:issued "2010-11-23"^^xsd:date .</code></pre>
+<figcaption>An example of the GeoDCAT-AP PROV-based representation of conformance. The key entities are marked in bold.</figcaption>
+</figure>
+
+<p>There are however some aspects of data quality not yet addressed. As far as GeoDCAT-AP is concerned, these include the following ones:</p>
+
+<ul>
+<li>Spatial resolution.</li>
+<li>Data quality assessments expressed with quantitative test results.</li>
+</ul>
+
+<p>Finally, another potentially relevant use case is related to exploiting users' feedback to assess data quality. This may include feedback from data consumers (e.g., reporting errors in a dataset), as well as data peer reviewing.</p>
+
+<p>This information need not be part of dataset metadata, and it can be collected and stored separately. Requirements include contextual information (who's providing feedback, when, etc.), that can be used to aggregate feedback data according to given criteria.</p>
+
+<p>To address such gaps, the possible use of DQV and of the W3C Dataset Usage Vocabulary (DUV)&nbsp;[<a href="#ref-DUV">DUV</a>] is being considered. In particular:</p>
+<ul>
+<li>The DQV specification includes a number of examples describing how to model spatial resolution - see <a title="Express dataset precision and accuracy" href="https://www.w3.org/TR/vocab-dqv/#ExpressDatasetAccuracyPrecision">Section&nbsp;6.13</a>. Notably, such an approach can also be used to model also "temporal resolution", and, more in general, the notion of "data granularity".</li>
+<li>DQV also provides a means to express quantitative quality assessments - see <a title="Express a quality assessment with quality metrics" href="https://www.w3.org/TR/vocab-dqv/#ExpressAQualityAssessmentWithQualityMetrics">Section&nbsp;6.1</a>.</li>
+</ul>
+<p>When used in conjunction with DQV, DUV allows the representation of annotations about data quality, carrying also provenance information.</p>
+        
+      </section>
+      
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+
+<dl>
+
+<dt id="ref-CSW">CSW</dt>
+<dd>
+<cite class="title">Catalogue Service</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">Open Geospatial Consortium (OGC)</span>
+<span class="URL"><a href="http://www.opengeospatial.org/standards/cat">http://www.opengeospatial.org/standards/cat</a></span>
+</dd>
+
+<dt id="ref-CKAN">CKAN</dt>
+<dd>
+<cite class="title">ckan - The open source data portal software</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">Open Knowledge Foundation (OKFN)</span>
+<span class="URL"><a href="http://ckan.org/">http://ckan.org/</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP">DCAT-AP</dt>
+<dd>
+<cite class="title">DCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2015</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/dcat-application-profile-data-portals-europe">https://joinup.ec.europa.eu/solution/dcat-application-profile-data-portals-europe</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP-IG">DCAT-AP-IG</dt>
+<dd>
+<cite class="title">DCAT application profile implementation guidelines</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/dcat-application-profile-implementation-guidelines">https://joinup.ec.europa.eu/solution/dcat-application-profile-implementation-guidelines</a></span>
+</dd>
+
+<dt id="ref-DCAT-AP-Schema">DCAT-AP-Schema</dt>
+<dd>
+<cite class="title">DCAT-AP to Schema.org Mapping</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">European Commission, Joint Research Centre (JRC)</span>
+<span class="URL"><a href="https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/dcat-ap-to-schema.org/">https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/dcat-ap-to-schema.org/</a></span>
+</dd>
+
+<dt id="ref-DQV">DQV</dt>
+<dd>
+<cite class="title">Data on the Web Best Practices: Data Quality Vocabulary</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/vocab-dqv/">https://www.w3.org/TR/vocab-dqv/</a></span>
+</dd>
+
+<dt id="ref-DUV">DUV</dt>
+<dd>
+<cite class="title">Data on the Web Best Practices: Dataset Usage Vocabulary</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/vocab-duv/">https://www.w3.org/TR/vocab-duv/</a></span>
+</dd>
+
+<dt id="ref-GeoDCAT-AP">GeoDCAT-AP</dt>
+<dd>
+<cite class="title">GeoDCAT-AP: A geospatial extension for the DCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/node/139283">https://joinup.ec.europa.eu/node/139283</a></span>
+</dd>
+
+<dt id="ref-GN">GN</dt>
+<dd>
+<cite class="title">GeoNetwork opensource</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">Open Source Geospatial Foundation (OSGeo)</span>
+<span class="URL"><a href="http://geonetwork-opensource.org/">http://geonetwork-opensource.org/</a></span>
+</dd>
+
+<dt id="ref-Microdata">Microdata</dt>
+<dd>
+<cite class="title">HTML Microdata</cite>
+<span class="date">(<time>2013</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/microdata/">https://www.w3.org/TR/microdata/</a></span>
+</dd>
+
+<dt id="ref-HTML-RDFa">HTML-RDFa</dt>
+<dd>
+<cite class="title">HTML+RDFa 1.1 - Second Edition: Support for RDFa in HTML4 and HTML5</cite>
+<span class="date">(<time>2015</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/html-rdfa/">https://www.w3.org/TR/html-rdfa/</a></span>
+</dd>
+
+<dt id="ref-ISO-19115">ISO-19115</dt>
+<dd>
+<cite class="title">ISO 19115:2003: Geographic information -- Metadata</cite>
+<span class="date">(<time>2003</time>)</span>
+<span class="organisation">International Organization for Standardization (ISO)</span>
+<span class="URL"><a href="https://www.iso.org/standard/26020.html">https://www.iso.org/standard/26020.html</a></span>
+</dd>
+
+<dt id="ref-ISO-19139">ISO-19139</dt>
+<dd>
+<cite class="title">ISO/TS 19139:2007: Geographic information -- Metadata -- XML schema implementation</cite>
+<span class="date">(<time>2007</time>)</span>
+<span class="organisation">International Organization for Standardization (ISO)</span>
+<span class="URL"><a href="https://www.iso.org/standard/32557.html">https://www.iso.org/standard/32557.html</a></span>
+</dd>
+
+<dt id="ref-JSON-LD">JSON-LD</dt>
+<dd>
+<cite class="title">JSON-LD 1.0: A JSON-based Serialization for Linked Data</cite>
+<span class="date">(<time>2014</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/json-ld/">https://www.w3.org/TR/json-ld/</a></span>
+</dd>
+
+<dt id="ref-Microformats">Microformats</dt>
+<dd>
+<cite class="title">Microformats</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="URL"><a href="http://microformats.org/about">http://microformats.org/about</a></span>
+</dd>
+
+<dt id="ref-OpenSearch">OpenSearch</dt>
+<dd>
+<cite class="title">OpenSearch</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">OpenSearch.org</span>
+<span class="URL"><a href="http://www.opensearch.org/">http://www.opensearch.org/</a></span>
+</dd>
+
+<dt id="ref-OAI-PMH">OAI-PMH</dt>
+<dd>
+<cite class="title">Protocol for Metadata Harvesting</cite>
+<span class="date">(<time>2002</time>)</span>
+<span class="organisation">Open Archives Initiative (OAI)</span>
+<span class="URL"><a href="https://www.openarchives.org/pmh/">https://www.openarchives.org/pmh/</a></span>
+</dd>
+
+<dt id="ref-PROV">PROV</dt>
+<dd>
+<cite class="title">PROV-O: The PROV Ontology</cite>
+<span class="date">(<time>2013</time>)</span>
+<span class="organisation">World Wide Web Consortium (W3C)</span>
+<span class="URL"><a href="https://www.w3.org/TR/prov-o/">https://www.w3.org/TR/prov-o/</a></span>
+</dd>
+
+<dt id="ref-HTTP-LINK">HTTP-LINK</dt>
+<dd>
+<cite class="title">RFC 5988: Web Linking</cite>
+<span class="date">(<time>2010</time>)</span>
+<span class="organisation">Internet Engineering Task Force (IETF)</span>
+<span class="URL"><a href="https://tools.ietf.org/html/rfc5988">https://tools.ietf.org/html/rfc5988</a></span>
+</dd>
+
+<dt id="ref-GNTB">GNTB</dt>
+<dd>
+<cite class="title">Spatial Data on the Web using the current SDI</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">Geonovum</span>
+<span class="URL"><a href="https://geo4web-testbed.github.io/topic4/">https://geo4web-testbed.github.io/topic4/</a></span>
+</dd>
+
+<dt id="ref-StatDCAT-AP">StatDCAT-AP</dt>
+<dd>
+<cite class="title">StatDCAT application profile for data portals in Europe</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://joinup.ec.europa.eu/solution/statdcat-application-profile-data-portals-europe">https://joinup.ec.europa.eu/solution/statdcat-application-profile-data-portals-europe</a></span>
+</dd>
+
+<dt id="ref-GeoDCAT-API">GeoDCAT-API</dt>
+<dd>
+<cite class="title">The GeoDCAT-AP API (GeoDCAT-API)</cite>
+<span class="date">(<time>2016</time>)</span>
+<span class="organisation">EU ISA Programme (ISA&sup2;)</span>
+<span class="URL"><a href="https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/iso-19139-to-dcat-ap/browse/api">https://webgate.ec.europa.eu/CITnet/stash/projects/ODCKAN/repos/iso-19139-to-dcat-ap/browse/api</a></span>
+</dd>
+
+</dl>
+  
+    </section>
+    <footer>
+    </footer>
+    </article>  
+  </body>
+</html>
